@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Interactieve Kaart Trompenberg</title>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+
+    <style>
+        body, html { 
+            height: 100%; 
+            margin: 0; 
+            background: #729c6a; 
+            color: #37632e; 
+            font-size: 25px;
+        }
+
+        #titel {
+            text-align: center; 
+            text-decoration: underline;
+        }
+
+        #map-container {
+            position: relative;
+            height: calc(95% - 70px); /* Hoogte aanpassen om ruimte te maken voor de titel */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        #map { 
+            height: 700px; 
+            width: 1200px; 
+        } /* Specificeer de grootte van de kaart */
+
+        #coords {
+            position: absolute;
+            background: rgba(255, 255, 255, 0.8);
+            padding: 5px 10px;
+            border: 1px solid black;
+            font-family: Arial, sans-serif;
+            font-size: 14px;
+            color: black;
+            pointer-events: none; /* Zorg ervoor dat de cursor niet verandert als je over de coördinaten beweegt */
+            z-index: 1000; /* Zorg ervoor dat het bovenop de kaart weergegeven wordt */
+        }
+
+        .top-right-button {
+            position: absolute;
+            top: 50px;
+            right: 15px;
+            padding: 10px 20px;
+            font-size: 16px;
+            background-color: #37632e;
+            color: white;
+            border: none;
+            cursor: pointer;
+            z-index: 1000;
+        }
+        
+        .top-right-button:hover {
+            background-color: #294c22;
+        }
+    </style>
+</head>
+<body>
+    <div id="titel">
+        <h1>Trompenberg</h1>
+    </div>
+
+    <div id="map-container">
+        <div id="map"></div>
+        <div id="coords">Lat, Lng</div>
+    </div>
+
+    <button class="top-right-button" onclick="window.location.href='kaart Spiegel.html'">Kaart van 
+    het Spiegel</button>
+
+    <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+    <script>
+        var map = L.map('map', {
+            center: [52.2389, 5.1589], // Middelpunt van Trompenberg
+            zoom: 15.3, // Startzoomniveau aanpassen aan gewenste detailniveau
+            minZoom: 15.3, // Minimumzoomniveau instellen
+            maxZoom: 30, // Maximumzoomniveau instellen
+            dragging: true, // Kaart slepen uitschakelen
+            touchZoom: false, // Zoom via touch uitschakelen
+            scrollWheelZoom: false, // Zoom via scrollen uitschakelen
+            keyboard: false, // Kaartbeweging via toetsenbord uitschakelen
+            maxBounds: [[52.233, 5.142], [52.245, 5.177]], // Grenzen van het weergegeven gebied
+            maxBoundsViscosity: 1.0 // Zorgt ervoor dat de kaart binnen de grenzen blijft
+        });
+
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            maxZoom: 19,
+            attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+        }).addTo(map);
+
+        // Voorbeeld van een marker met pop-up
+        var marker = L.marker([52.2371, 5.1740]).addTo(map)
+            .bindPopup('<b>media park</b><br> wow.');
+
+        var marker = L.marker([52.2389, 5.1589]).addTo(map)
+            .bindPopup('<b>Historisch Gebeurtenis</b><br><img src="https://www.hartogriet.nl/wp-content/uploads/rietdekkersbedrijf-hilversum-bussumergrintweg-61-2-480x355.jpg" alt="Beschrijving" style="width: 200px;"/><br>Beschrijving van de gebeurtenis.');
+
+        // Voorbeeld van een marker met video in pop-up
+        var marker = L.marker([52.2400, 5.1560]).addTo(map)
+            .bindPopup(`
+                <b>Historisch Gebeurtenis</b><br>
+                <video width="300" controls>
+                    <source src="jouw_video_url.mp4" type="video/mp4">
+                    Uw browser ondersteunt geen video.
+                </video><br>
+                Beschrijving van de gebeurtenis.
+            `);
+
+        // Functie om coördinaten weer te geven
+        function showCoords(e) {
+            var coords = document.getElementById('coords');
+            coords.innerHTML = 'Lat: ' + e.latlng.lat.toFixed(3) + ', Lng: ' + e.latlng.lng.toFixed(3);
+            coords.style.left = (e.originalEvent.clientX + 2) + 'px'; // 2px rechts van de cursor
+            coords.style.top = (e.originalEvent.clientY + 2) + 'px'; // 2px onder de cursor
+        }
+
+
+
+
+        // Event listener voor muisbeweging
+        map.on('mousemove', showCoords);
+    </script>
+</body>
+</html>
+
+
+
